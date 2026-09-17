@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DiSSCU App - Language & Translation Engine (language.js)
+   Shohochor App - Language & Translation Engine (language.js)
    Features: Seamless EN/BN switching, Screen Reader Aria-label logic,
              and Global Translation Helper for dynamic content.
    ========================================================================== */
@@ -7,7 +7,7 @@
 const translations = {
     en: {
         "btn-lang": "বাংলা",
-        "app-name": "DISSCU",
+        "app-name": "SHOHOCHOR",
         "welcome": "Welcome!",
         "dashboard-title": "Dashboard",
         "menu-profile": "Profile",
@@ -127,7 +127,7 @@ const translations = {
     },
     bn: {
         "btn-lang": "English",
-        "app-name": "DISSCU",
+        "app-name": "সহচর",
         "welcome": "স্বাগতম!",
         "dashboard-title": "ড্যাশবোর্ড",
         "menu-profile": "প্রোফাইল",
