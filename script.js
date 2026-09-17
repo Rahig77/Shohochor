@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DiSSCU App - UI Controller & Frontend Logic (script.js)
+   Shohochor App - UI Controller & Frontend Logic (script.js)
    Description: Handles page navigation, form validation (passwords), 
                 dynamic dropdowns, date pickers, and Tab Accessibility.
    ========================================================================== */

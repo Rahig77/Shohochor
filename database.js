@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DiSSCU App - Real Firebase Backend (database.js)
+   Shohochor App - Real Firebase Backend (database.js)
    Features: Advanced Auth, Request Engine, Auto-expiration (14 days),
              Real-time Combined Feed/Notifications, Filtering & XSS Prevention.
    ========================================================================== */
