@@ -11,7 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+    <div id="sr-announcer" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
+    <div id="toast-container" aria-hidden="true"></div>
 
     <header class="app-header">
         <button id="btn-language-toggle" data-key="btn-lang" aria-label="Change Language to Bengali">বাংলা</button>
@@ -28,12 +29,17 @@
             </div>
 
             <div id="form-login-container" role="tabpanel" aria-labelledby="tab-login" tabindex="0">
-                <form id="login-form">
+                <form id="login-form" novalidate>
                     <label for="login-email" data-key="label-email">Email Address:</label>
                     <input type="email" id="login-email" placeholder="Enter Email" required>
+                    <div id="login-email-error" class="error-msg" aria-live="polite"></div>
                     
                     <label for="login-password" data-key="label-password">Password:</label>
-                    <input type="password" id="login-password" placeholder="Enter Password" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="login-password" placeholder="Enter Password" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="login-password" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="login-password-error" class="error-msg" aria-live="polite"></div>
                     
                     <button type="button" class="btn-link" id="btn-forgot-pass" data-key="btn-forgot-pass">Forgot Password?</button>
                     <button type="submit" class="btn-primary" data-key="btn-login-submit">Login</button>
@@ -44,18 +50,21 @@
             </div>
 
             <div id="form-register-container" role="tabpanel" aria-labelledby="tab-register" class="hidden" tabindex="0">
-                <form id="register-form">
+                <form id="register-form" novalidate>
                     <label for="reg-name" data-key="label-name">Full Name:</label>
                     <input type="text" id="reg-name" placeholder="Enter Name" required>
+                    <div id="reg-name-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-email" data-key="label-email">Email Address:</label>
                     <input type="email" id="reg-email" placeholder="Enter Email" required>
+                    <div id="reg-email-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-phone" data-key="label-phone">Phone Number:</label>
                     <input type="tel" id="reg-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="phone-desc" required>
                     <div id="phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
+                    <div id="reg-phone-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset>
+                    <fieldset role="radiogroup">
                         <legend data-key="legend-gender">Gender:</legend>
                         <label><input type="radio" name="reg_gender" value="Male" required><span data-key="gender-male">Male</span></label>
                         <label><input type="radio" name="reg_gender" value="Female" required><span data-key="gender-female">Female</span></label>
@@ -64,12 +73,20 @@
                     <div id="pwd-desc" class="pwd-instruction sr-only" data-key="desc-pwd-rules">Password must be between 8 and 12 characters long.</div>
                     
                     <label for="reg-password" data-key="label-new-password">New Password (8-12 characters):</label>
-                    <input type="password" id="reg-password" minlength="8" maxlength="12" aria-describedby="pwd-desc" placeholder="8-12 characters" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="reg-password" minlength="8" maxlength="12" aria-describedby="pwd-desc" placeholder="8-12 characters" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="reg-password" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="reg-password-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-password-confirm" data-key="label-confirm-password">Confirm New Password:</label>
-                    <input type="password" id="reg-password-confirm" minlength="8" maxlength="12" placeholder="Re-type password" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="reg-password-confirm" minlength="8" maxlength="12" placeholder="Re-type password" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="reg-password-confirm" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="reg-password-confirm-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset>
+                    <fieldset role="radiogroup">
                         <legend data-key="legend-user-type">Join As:</legend>
                         <label><input type="radio" name="reg_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
                         <label><input type="radio" name="reg_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
@@ -105,13 +122,13 @@
                 <input type="tel" id="onboard-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="onboard-phone-desc" required>
                 <div id="onboard-phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-gender">Gender:</legend>
                     <label><input type="radio" name="onboard_gender" value="Male" required><span data-key="gender-male">Male</span></label>
                     <label><input type="radio" name="onboard_gender" value="Female" required><span data-key="gender-female">Female</span></label>
                 </fieldset>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-user-type">Join As:</legend>
                     <label><input type="radio" name="onboard_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
                     <label><input type="radio" name="onboard_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
@@ -280,13 +297,13 @@
                 <label for="req-scr-session" data-key="lbl-session">Session:</label>
                 <input type="text" id="req-scr-session" required>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-exam-type">Exam Type:</legend>
                     <label><input type="radio" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
                     <label><input type="radio" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
                 </fieldset>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-year-sem">Select Year/Semester:</legend>
                     <label><input type="radio" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
                     <label><input type="radio" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
@@ -331,7 +348,7 @@
                 <label for="req-rec-dept" data-key="lbl-dept">Department:</label>
                 <input type="text" id="req-rec-dept" required>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-material">Material Type:</legend>
                     <label><input type="radio" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
                     <label><input type="radio" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>

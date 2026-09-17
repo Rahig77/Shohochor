@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            if (window.validateForm && !window.validateForm('register-form')) return;
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const phone = document.getElementById('reg-phone').value;
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const terms = document.getElementById('reg-terms').checked;
 
             if (!terms) {
-                alert("You must accept the Terms and Conditions."); return;
+                showToast("You must accept the Terms and Conditions."); return;
             }
 
             auth.createUserWithEmailAndPassword(email, password)
@@ -94,10 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 })
                 .then(() => {
-                    alert("Registration Successful! Please check your email to VERIFY your account.");
+                    showToast("Registration Successful! Please check your email to VERIFY your account.");
                     auth.signOut(); registerForm.reset();
                 })
-                .catch(error => alert("Registration Error: " + error.message));
+                .catch(error => showToast("Registration Error: " + error.message));
         });
     }
 
@@ -106,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            if (window.validateForm && !window.validateForm('login-form')) return;
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
@@ -113,12 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then((userCredential) => {
                     const user = userCredential.user;
                     if (!user.emailVerified && user.email !== SUPER_ADMIN_EMAIL) {
-                        alert("Please verify your email address first!"); auth.signOut();
+                        showToast("Please verify your email address first!"); auth.signOut();
                     } else {
                         loginForm.reset();
                     }
                 })
-                .catch(error => alert("Login Error: " + error.message));
+                .catch(error => showToast("Login Error: " + error.message));
         });
     }
 
@@ -133,7 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.navigateTo('screen-onboarding'); // Show Onboarding for new users
                     }
                 });
-            }).catch(error => alert("Google Sign-In Error: " + error.message));
+            }).catch(error => {
+                // Ignore errors where user closed the popup intentionally
+                if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+                    console.warn("User closed the Google Sign-in popup.");
+                    return;
+                }
+                showToast("Google Sign-In Error: " + error.message);
+            });
         });
     }
 
@@ -154,9 +163,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 dept: "", session: "", roll: "", year_semester: ""
             }).then(() => {
-                alert("Profile completed successfully!");
+                showToast("Profile completed successfully!");
                 loadUserDataAndRedirect(user);
-            }).catch(err => alert("Error: " + err.message));
+            }).catch(err => showToast("Error: " + err.message));
         });
     }
 
@@ -165,9 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (forgotBtn) {
         forgotBtn.addEventListener('click', () => {
             const email = document.getElementById('login-email').value;
-            if (!email) { alert("Enter your email in the box first."); return; }
-            auth.sendPasswordResetEmail(email).then(() => alert("Reset link sent!"))
-                .catch(err => alert("Error: " + err.message));
+            if (!email) { showToast("Enter your email in the box first."); return; }
+            auth.sendPasswordResetEmail(email).then(() => showToast("Reset link sent!"))
+                .catch(err => showToast("Error: " + err.message));
         });
     }
 
@@ -245,9 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
         db.collection('users').doc(currentUserId).update({
             dept: escapeHTML(dept), session: escapeHTML(session), roll: escapeHTML(roll), year_semester: escapeHTML(ysDropdown)
         }).then(() => {
-            alert("Profile updated successfully!");
+            showToast("Profile updated successfully!");
             loadUserDataAndRedirect(auth.currentUser);
-        }).catch(err => alert("Error saving profile: " + err.message));
+        }).catch(err => showToast("Error saving profile: " + err.message));
     });
 
     function preFillRequestForms() {
@@ -279,10 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
         collectionData.acceptors = [];
         
         db.collection('requests').add(collectionData).then(() => {
-            alert("Request sent successfully! Everyone will be notified.");
+            showToast("Request sent successfully! Everyone will be notified.");
             window.navigateTo('screen-your-requests');
             loadYourRequests();
-        }).catch(err => alert("Error: " + err.message));
+        }).catch(err => showToast("Error: " + err.message));
     }
 
     document.getElementById('form-scribe')?.addEventListener('submit', (e) => {
@@ -448,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             timestamp: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     });
-                    alert("Request Accepted!");
+                    showToast("Request Accepted!");
                 });
             });
         });
@@ -458,12 +467,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phone = e.target.getAttribute('data-phone');
                 if(phone) {
                     if(confirmAction("Call via Phone Number?")) window.location.href = `tel:${phone}`;
-                } else alert("Phone number not provided.");
+                } else showToast("Phone number not provided.");
             });
         });
 
         document.querySelectorAll('.msg-btn').forEach(btn => {
-            btn.addEventListener('click', () => alert("In-app messaging feature coming soon!"));
+            btn.addEventListener('click', () => showToast("In-app messaging feature coming soon!"));
         });
     }
 
@@ -513,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.deleteOwnRequest = function(docId) {
         if(confirmAction("Are you sure you want to permanently delete this request?")) {
-            db.collection('requests').doc(docId).delete().then(() => alert("Deleted!"));
+            db.collection('requests').doc(docId).delete().then(() => showToast("Deleted!"));
         }
     };
 
@@ -533,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 publisherEmail: currentUserData.email,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                alert("Notice Published!");
+                showToast("Notice Published!");
                 noticeForm.reset();
                 document.getElementById('notice-form-container').classList.add('hidden');
             });
@@ -573,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btn-delete-notice').onclick = () => {
                 if(confirmAction("Delete this notice permanently?")) {
                     db.collection('notices').doc(id).delete().then(() => {
-                        alert("Notice deleted.");
+                        showToast("Notice deleted.");
                         window.navigateTo('screen-notices');
                     });
                 }
@@ -609,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.removeAdmin = function(uid) {
         if(confirmAction("Remove this user from Admins?")) {
             db.collection('users').doc(uid).update({ role: "General Member" }).then(() => {
-                alert("User demoted to General Member."); loadAdminConsole();
+                showToast("User demoted to General Member."); loadAdminConsole();
             });
         }
     };
@@ -669,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.makeAdmin = function(uid) {
         if(confirmAction("Promote this user to Admin?")) {
             db.collection('users').doc(uid).update({ role: "Admin" }).then(() => {
-                alert("User promoted to Admin!"); loadPotentialAdmins();
+                showToast("User promoted to Admin!"); loadPotentialAdmins();
             });
         }
     };

@@ -275,6 +275,33 @@ input[type="radio"] {
     margin-top: 5px;
 }
 
+/* টোস্ট মেসেজ */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toast {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-align: center;
+}
+.toast.show {
+    opacity: 1;
+}
+
 /* গ্লোবাল ফুটার */
 .app-footer {
     background-color: var(--bg-color);

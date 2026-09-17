@@ -4,7 +4,7 @@
                 dynamic dropdowns, date pickers, and Tab Accessibility.
    ========================================================================== */
 
-// 1. Global Screen Reader Announcer
+// 1. Global Screen Reader Announcer & Toast
 window.announce = function(message) {
     const announcer = document.getElementById('sr-announcer');
     if (announcer) {
@@ -12,6 +12,24 @@ window.announce = function(message) {
         setTimeout(() => {
             announcer.textContent = message;
         }, 100);
+    }
+};
+
+window.showToast = function(message) {
+    window.announce(message);
+    const container = document.getElementById('toast-container');
+    if (container) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        // trigger reflow
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 };
 
@@ -33,7 +51,29 @@ window.navigateTo = function(targetScreenId) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
+    // ==========================================
+    // Password Visibility Toggle
+    // ==========================================
+    document.querySelectorAll('.btn-toggle-password').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const inputEl = document.getElementById(targetId);
+            if (!inputEl) return;
+
+            const isPassword = inputEl.type === 'password';
+            inputEl.type = isPassword ? 'text' : 'password';
+
+            // Update ARIA and text
+            btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+            btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+            btn.innerText = isPassword ? 'Hide' : 'Show';
+
+            // Announce to screen readers
+            window.announce(isPassword ? 'Password is now visible' : 'Password is now hidden');
+        });
+    });
+
     // ==========================================
     // Navigation & Menu Button Controllers
     // ==========================================
@@ -118,24 +158,94 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // Password Match Validation (Registration)
+    // Form Validation and Specific Inline Errors
     // ==========================================
-    const regPassword = document.getElementById('reg-password');
-    const regPasswordConfirm = document.getElementById('reg-password-confirm');
-
-    function checkPasswordMatch() {
-        if (!regPassword || !regPasswordConfirm) return;
-        if (regPassword.value !== regPasswordConfirm.value) {
-            regPasswordConfirm.setCustomValidity("Passwords do not match!");
-        } else {
-            regPasswordConfirm.setCustomValidity(""); // Clears the error
+    function showInlineError(inputId, message) {
+        const inputEl = document.getElementById(inputId);
+        const errorEl = document.getElementById(inputId + '-error');
+        if (inputEl && errorEl) {
+            errorEl.innerText = message;
+            inputEl.setAttribute('aria-invalid', 'true');
+            // Append error id to existing aria-describedby if needed, or just set it
+            const existingDesc = inputEl.getAttribute('aria-describedby') || '';
+            const newDescId = inputId + '-error';
+            if (!existingDesc.includes(newDescId)) {
+                inputEl.setAttribute('aria-describedby', (existingDesc + ' ' + newDescId).trim());
+            }
         }
     }
 
-    if (regPassword && regPasswordConfirm) {
-        regPassword.addEventListener('input', checkPasswordMatch);
-        regPasswordConfirm.addEventListener('input', checkPasswordMatch);
+    function clearInlineError(inputId) {
+        const inputEl = document.getElementById(inputId);
+        const errorEl = document.getElementById(inputId + '-error');
+        if (inputEl && errorEl) {
+            errorEl.innerText = '';
+            inputEl.removeAttribute('aria-invalid');
+            // Remove error id from aria-describedby
+            const existingDesc = inputEl.getAttribute('aria-describedby') || '';
+            const newDescId = inputId + '-error';
+            if (existingDesc.includes(newDescId)) {
+                inputEl.setAttribute('aria-describedby', existingDesc.replace(newDescId, '').trim());
+            }
+        }
     }
+
+    window.validateForm = function(formId) {
+        const form = document.getElementById(formId);
+        if (!form) return false;
+
+        let isValid = true;
+        let firstInvalidInput = null;
+
+        form.querySelectorAll('input[required]').forEach(input => {
+            clearInlineError(input.id);
+            if (!input.value.trim()) {
+                showInlineError(input.id, "This field cannot be left blank.");
+                isValid = false;
+                if (!firstInvalidInput) firstInvalidInput = input;
+            } else if (!input.checkValidity()) {
+                if (input.type === 'email') {
+                    showInlineError(input.id, "Invalid email format.");
+                } else if (input.id === 'reg-phone') {
+                    showInlineError(input.id, "Phone number must be exactly 11 digits.");
+                } else if (input.id === 'reg-password') {
+                    showInlineError(input.id, "Password must be 8-12 characters long.");
+                } else {
+                    showInlineError(input.id, input.validationMessage);
+                }
+                isValid = false;
+                if (!firstInvalidInput) firstInvalidInput = input;
+            }
+        });
+
+        if (formId === 'register-form') {
+            const regPassword = document.getElementById('reg-password');
+            const regPasswordConfirm = document.getElementById('reg-password-confirm');
+            if (regPassword && regPasswordConfirm && regPassword.value && regPasswordConfirm.value) {
+                if (regPassword.value !== regPasswordConfirm.value) {
+                    showInlineError('reg-password-confirm', "Passwords do not match.");
+                    isValid = false;
+                    if (!firstInvalidInput) firstInvalidInput = regPasswordConfirm;
+                }
+            }
+        }
+
+        if (!isValid && firstInvalidInput) {
+            firstInvalidInput.focus();
+        }
+
+        return isValid;
+    };
+
+    // Clear errors on input
+    ['login-form', 'register-form'].forEach(formId => {
+        const form = document.getElementById(formId);
+        if(form) {
+            form.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', () => clearInlineError(input.id));
+            });
+        }
+    });
 
     // ==========================================
     // Toggle Notice Form Visibility
