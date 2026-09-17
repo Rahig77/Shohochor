@@ -1,0 +1,286 @@
+/* ==========================================================================
+   DiSSCU App - Accessible & High Contrast Style Sheet
+   ========================================================================== */
+
+/* গ্লোবাল রিসেট এবং রুট ভেরিয়েবল (সহজে রং ও ফন্ট পরিবর্তনের জন্য) */
+:root {
+    --bg-color: #111827;          /* গভীর নীলাভ-কালো ব্যাকগ্রাউন্ড (চোখের ওপর চাপ কমায়) */
+    --text-color: #f9fafb;        /* উজ্জ্বল অফ-হোয়াইট টেক্সট (উচ্চ কনট্রাস্ট) */
+    --accent-color: #fbbf24;      /* হাই-ভিজিবিলিটি অ্যাম্বার/হলুদ (গুরুত্বপূর্ণ হাইলাইটের জন্য) */
+    --btn-primary-bg: #1e40af;    /* গাঢ় নীল বাটন ব্যাকগ্রাউন্ড */
+    --btn-success-bg: #065f46;    /* গাঢ় সবুজ (এপ্রুভ বাটন) */
+    --btn-danger-bg: #991b1b;     /* গাঢ় লাল (লগআউট বাটন) */
+    --card-bg: #1f2937;           /* ফিড ও নোটিফিকেশনের কার্ড ব্যাকগ্রাউন্ড */
+    --border-color: #4b5563;      /* স্পষ্ট বর্ডার */
+    --error-color: #f87171;       /* উজ্জ্বল লাল (এরর মেসেজ) */
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* বডি স্টাইলিং - ফন্ট সাইজ বড় এবং স্পষ্ট রাখা হয়েছে */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    font-size: 18px;             /* সাধারণের চেয়ে বড় ফন্ট সাইজ, যা পড়ার জন্য সহজ */
+    line-height: 1.6;            /* দুই লাইনের মাঝে পর্যাপ্ত ফাঁকা জায়গা */
+    letter-spacing: 0.5px;       /* অক্ষরের মাঝে স্পষ্ট দূরত্ব */
+}
+
+/* স্ক্রিন রিডার অনলি ইউটিলিটি (যা স্ক্রিনে দেখা যাবে না কিন্তু স্ক্রিন রিডার পড়বে) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* স্ক্রিন নিয়ন্ত্রণ (লুকানো ও দেখানোর জন্য) */
+.screen {
+    padding: 20px;
+    min-height: calc(100vh - 120px);
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* স্পষ্ট ফোকাস স্টেট (স্ক্রিন রিডার বা কিবোর্ড ইউজার যেখানে যাবে সেখানে মোটা হলুদ বর্ডার আসবে) */
+input:focus, select:focus, textarea:focus, button:focus, [tabindex="0"]:focus {
+    outline: 4px solid var(--accent-color) !important;
+    outline-offset: 2px;
+}
+
+/* হেডার এবং ভাষা পরিবর্তন বাটন */
+.app-header {
+    background-color: var(--card-bg);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#btn-language-toggle {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* হেডিং স্টাইলিং */
+h1 {
+    font-size: 32px;
+    color: var(--accent-color);  /* অ্যাপের নাম সবসময় উজ্জ্বল দেখাবে */
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 800;
+}
+
+h2 {
+    font-size: 24px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-top: 20px;
+    color: var(--text-color);
+}
+
+h3 {
+    font-size: 22px;
+    color: var(--accent-color);
+}
+
+/* বড় এবং স্পষ্ট বাটনসমূহ (টাচ টার্গেট অন্তত 48px উঁচু) */
+button, .nav-btn {
+    display: block;
+    width: 100%;
+    min-height: 52px;            /* বড় ক্লিকিং এরিয়া, যাতে ট্যাপ করতে সুবিধা হয় */
+    margin: 12px 0;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;            /* মেনু বাটনগুলো বাম দিকে সারিবদ্ধ থাকবে */
+    color: var(--text-color);
+}
+
+/* ড্যাশবোর্ড মেনু বাটন */
+.dashboard-menu .nav-btn {
+    background-color: var(--card-bg);
+    border-left: 6px solid var(--accent-color); /* বামে একটি মোটা হলুদ দাগ, যা চাক্ষুষ ট্র্যাকিং সহজ করে */
+    padding-left: 15px;
+}
+
+/* ফিরে যান (Back) বাটন */
+.btn-back {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    text-align: center;
+    width: auto;
+    display: inline-block;
+    padding: 8px 20px;
+    min-height: 40px;
+    margin-bottom: 15px;
+}
+
+/* বিভিন্ন ধরনের রঙের বাটন */
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+    text-align: center;
+}
+
+.btn-secondary {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    text-align: center;
+}
+
+.btn-success {
+    background-color: var(--btn-success-bg);
+    text-align: center;
+}
+
+.btn-danger {
+    background-color: var(--btn-danger-bg);
+    text-align: center;
+}
+
+.btn-link {
+    background-color: transparent;
+    color: var(--accent-color);
+    text-decoration: underline;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* ফর্ম ও ইনপুট এলিমেন্টস */
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    min-height: 50px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+/* রেডিও বাটন এবং ফিল্ডসেট (পর্যাপ্ত স্পেসিং সহ বড় অপশন) */
+fieldset {
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+legend {
+    font-weight: bold;
+    padding: 0 10px;
+    color: var(--accent-color);
+}
+
+fieldset label {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+input[type="radio"] {
+    transform: scale(1.5);        /* রেডিও বাটনগুলো বড় করা হয়েছে যেন সহজে দেখা যায় */
+    margin-right: 12px;
+    vertical-align: middle;
+}
+
+/* ট্যাব সিস্টেম (লগইন / রেজিস্ট্রেশন) */
+.tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.tabs button {
+    flex: 1;
+    background-color: transparent;
+    text-align: center;
+    border-radius: 0;
+    margin: 0;
+    border-bottom: 4px solid transparent;
+}
+
+.tabs button[aria-selected="true"] {
+    border-bottom-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* ফিড ও নোটিফিকেশন কার্ড (এক সোয়াইপে পুরোটা পড়ার ব্লক) */
+.card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.card p {
+    margin: 6px 0;
+}
+
+/* নোটিস লিস্ট বাটন */
+.notice-item-btn {
+    background-color: var(--card-bg);
+    border: 2px solid var(--border-color);
+    padding-left: 15px;
+}
+
+/* এরর এবং সফলতার মেসেজ */
+.error-msg {
+    color: var(--error-color);
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+/* গ্লোবাল ফুটার */
+.app-footer {
+    background-color: var(--bg-color);
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    border-top: 1px solid var(--border-color);
+    color: var(--border-color);
+}

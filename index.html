@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiSSCU App</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+    <header class="app-header">
+        <button id="btn-language-toggle" data-key="btn-lang" aria-label="Change Language to Bengali">বাংলা</button>
+    </header>
+
+    <main id="app-container">
+
+        <section id="screen-login" class="screen">
+            <h1 data-key="app-name">DISSCU</h1>
+            
+            <div class="tabs" role="tablist" aria-label="Authentication Tabs">
+                <button id="tab-login" role="tab" aria-selected="true" aria-controls="form-login-container" tabindex="0" data-key="tab-login">Login</button>
+                <button id="tab-register" role="tab" aria-selected="false" aria-controls="form-register-container" tabindex="-1" data-key="tab-register">Registration</button>
+            </div>
+
+            <div id="form-login-container" role="tabpanel" aria-labelledby="tab-login" tabindex="0">
+                <form id="login-form">
+                    <label for="login-email" data-key="label-email">Email Address:</label>
+                    <input type="email" id="login-email" placeholder="Enter Email" required>
+                    
+                    <label for="login-password" data-key="label-password">Password:</label>
+                    <input type="password" id="login-password" placeholder="Enter Password" required>
+                    
+                    <button type="button" class="btn-link" id="btn-forgot-pass" data-key="btn-forgot-pass">Forgot Password?</button>
+                    <button type="submit" class="btn-primary" data-key="btn-login-submit">Login</button>
+                </form>
+                
+                <div class="divider"><strong data-key="text-or">OR</strong></div>
+                <button type="button" id="btn-google-login" class="btn-secondary google-btn">Sign in with Google</button>
+            </div>
+
+            <div id="form-register-container" role="tabpanel" aria-labelledby="tab-register" class="hidden" tabindex="0">
+                <form id="register-form">
+                    <label for="reg-name" data-key="label-name">Full Name:</label>
+                    <input type="text" id="reg-name" placeholder="Enter Name" required>
+
+                    <label for="reg-email" data-key="label-email">Email Address:</label>
+                    <input type="email" id="reg-email" placeholder="Enter Email" required>
+
+                    <label for="reg-phone" data-key="label-phone">Phone Number:</label>
+                    <input type="tel" id="reg-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="phone-desc" required>
+                    <div id="phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
+
+                    <fieldset>
+                        <legend data-key="legend-gender">Gender:</legend>
+                        <label><input type="radio" name="reg_gender" value="Male" required><span data-key="gender-male">Male</span></label>
+                        <label><input type="radio" name="reg_gender" value="Female" required><span data-key="gender-female">Female</span></label>
+                    </fieldset>
+
+                    <div id="pwd-desc" class="pwd-instruction sr-only" data-key="desc-pwd-rules">Password must be between 8 and 12 characters long.</div>
+                    
+                    <label for="reg-password" data-key="label-new-password">New Password (8-12 characters):</label>
+                    <input type="password" id="reg-password" minlength="8" maxlength="12" aria-describedby="pwd-desc" placeholder="8-12 characters" required>
+
+                    <label for="reg-password-confirm" data-key="label-confirm-password">Confirm New Password:</label>
+                    <input type="password" id="reg-password-confirm" minlength="8" maxlength="12" placeholder="Re-type password" required>
+
+                    <fieldset>
+                        <legend data-key="legend-user-type">Join As:</legend>
+                        <label><input type="radio" name="reg_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
+                        <label><input type="radio" name="reg_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
+                        <label><input type="radio" name="reg_type" value="Advisor"><span data-key="role-advisor">Advisor</span></label>
+                    </fieldset>
+
+                    <label class="terms-label">
+                        <input type="checkbox" id="reg-terms" required> 
+                        <span data-key="text-terms">I accept the Terms and Conditions</span>
+                    </label>
+
+                    <button type="submit" class="btn-primary" data-key="btn-register-submit">Register</button>
+                </form>
+            </div>
+
+            <footer class="app-footer">
+                <nav>
+                    <button class="btn-link" data-target="screen-contact" data-key="menu-contact">Contact Us</button> |
+                    <button class="btn-link" data-target="screen-about" data-key="menu-about">About Us</button> |
+                    <button class="btn-link" data-target="screen-report" data-key="menu-report">Report</button>
+                </nav>
+                <p class="copyright">&copy; 2026 Muktokobi Rahi</p>
+            </footer>
+        </section>
+
+        <section id="screen-onboarding" class="screen hidden">
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="onboard-title">Complete Your Profile</h2>
+            <p data-key="onboard-desc">Please provide the missing information to continue.</p>
+            
+            <form id="form-onboarding">
+                <label for="onboard-phone" data-key="label-phone">Phone Number:</label>
+                <input type="tel" id="onboard-phone" pattern="[0-9]{11}" maxlength="11" required>
+
+                <fieldset>
+                    <legend data-key="legend-gender">Gender:</legend>
+                    <label><input type="radio" name="onboard_gender" value="Male" required><span data-key="gender-male">Male</span></label>
+                    <label><input type="radio" name="onboard_gender" value="Female" required><span data-key="gender-female">Female</span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-key="legend-user-type">Join As:</legend>
+                    <label><input type="radio" name="onboard_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
+                    <label><input type="radio" name="onboard_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
+                    <label><input type="radio" name="onboard_type" value="Advisor"><span data-key="role-advisor">Advisor</span></label>
+                </fieldset>
+                
+                <button type="submit" class="btn-success" data-key="btn-save-continue">Save & Continue</button>
+            </form>
+        </section>
+
+        <section id="screen-dashboard" class="screen hidden">
+            <h1 data-key="app-name">DISSCU</h1>
+            <p data-key="welcome">Welcome!</p>
+            <h2 data-key="dashboard-title">Dashboard</h2>
+            
+            <nav class="dashboard-menu" aria-label="Main Menu">
+                <button class="nav-btn" data-target="screen-profile" data-key="menu-profile">Profile</button>
+                <button class="nav-btn" data-target="screen-notifications" data-key="menu-notifications">Notifications</button>
+                <button class="nav-btn" data-target="screen-notices" data-key="menu-notices">Notice Board</button>
+                <button class="nav-btn" data-target="screen-feed" data-key="menu-feed">Feed</button>
+                <button class="nav-btn" data-target="screen-request-menu" data-key="menu-request">Request for Help</button>
+                <button class="nav-btn" data-target="screen-executive" data-key="menu-ec">Executive Committee</button>
+                <button class="nav-btn" data-target="screen-advisor" data-key="menu-adv-panel">Advisor Panel</button>
+                <button class="nav-btn" id="btn-menu-admin" data-target="screen-admin" data-key="menu-admin" style="display: none;">Admin Manager</button>
+            </nav>
+
+            <footer class="app-footer">
+                <nav>
+                    <button class="btn-link nav-btn" data-target="screen-contact" data-key="menu-contact">Contact Us</button> |
+                    <button class="btn-link nav-btn" data-target="screen-about" data-key="menu-about">About Us</button> |
+                    <button class="btn-link nav-btn" data-target="screen-report" data-key="menu-report">Report</button>
+                </nav>
+                <p class="copyright">&copy; 2026 Muktokobi Rahi</p>
+            </footer>
+        </section>
+
+        <section id="screen-profile" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="profile-title">Profile</h2>
+
+            <div class="profile-info">
+                <div class="profile-field-group"><strong data-key="lbl-name">Name:</strong> <span id="prof-name"></span></div>
+                <div class="profile-field-group"><strong data-key="lbl-email">Email:</strong> <span id="prof-email"></span></div>
+                <div class="profile-field-group"><strong data-key="lbl-phone">Phone:</strong> <span id="prof-phone"></span></div>
+                <div class="profile-field-group"><strong data-key="lbl-gender">Gender:</strong> <span id="prof-gender"></span></div>
+                <div class="profile-field-group"><strong data-key="lbl-type">User Type:</strong> <span id="prof-type"></span></div>
+                
+                <div id="profile-dynamic-fields">
+                    <div class="profile-field-group">
+                        <strong data-key="lbl-dept">Department:</strong> 
+                        <input type="text" id="input-prof-dept" class="edit-box">
+                    </div>
+                    <div class="profile-field-group">
+                        <strong data-key="lbl-session">Session:</strong> 
+                        <input type="text" id="input-prof-session" class="edit-box">
+                    </div>
+                    <div class="profile-field-group">
+                        <strong data-key="lbl-id-roll">ID/Roll:</strong> 
+                        <input type="text" id="input-prof-roll" class="edit-box">
+                    </div>
+                    <div class="profile-field-group">
+                        <strong data-key="lbl-year-sem">Year/Semester:</strong>
+                        <div class="toggle-group">
+                            <label><input type="radio" name="prof_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
+                            <label><input type="radio" name="prof_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
+                        </div>
+                        <select id="prof-ys-dropdown" class="edit-box"><option value="">Select</option></select>
+                    </div>
+                </div>
+                <button id="btn-save-profile" class="btn-success" data-key="btn-save">Save Profile Changes</button>
+            </div>
+            
+            <button class="btn-secondary nav-btn" data-target="screen-settings" data-key="btn-settings">Settings</button>
+            <button id="btn-logout-real" class="btn-danger" data-key="btn-logout">Logout</button>
+        </section>
+
+        <section id="screen-notifications" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="notif-title">Notifications</h2>
+            
+            <div class="filter-container" aria-label="Notification Filters">
+                <label><input type="radio" name="notif_filter" value="all" checked> <span data-key="filter-all">All</span></label>
+                <label><input type="radio" name="notif_filter" value="scribe"> <span data-key="filter-scribe">Scribe Req</span></label>
+                <label><input type="radio" name="notif_filter" value="recording"> <span data-key="filter-record">Recording Req</span></label>
+                <label><input type="radio" name="notif_filter" value="general"> <span data-key="filter-gen">General Req</span></label>
+                <label><input type="radio" name="notif_filter" value="approval"> <span data-key="filter-approval">Approvals</span></label>
+            </div>
+            
+            <div id="notification-list" aria-live="polite"></div>
+        </section>
+
+        <section id="screen-feed" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="feed-title">Feed</h2>
+            
+            <div class="filter-container" aria-label="Feed Filters">
+                <label><input type="radio" name="feed_filter" value="all" checked> <span data-key="filter-all">All</span></label>
+                <label><input type="radio" name="feed_filter" value="scribe"> <span data-key="filter-scribe">Scribe Req</span></label>
+                <label><input type="radio" name="feed_filter" value="recording"> <span data-key="filter-record">Recording Req</span></label>
+                <label><input type="radio" name="feed_filter" value="general"> <span data-key="filter-gen">General Req</span></label>
+            </div>
+            
+            <div id="feed-list" aria-live="polite"></div>
+        </section>
+
+        <section id="screen-notices" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="notices-title">Notice Board</h2>
+            
+            <button id="btn-show-notice-form" class="btn-primary" data-key="btn-write-notice" style="display: none;"> + Write New Notice </button>
+            
+            <div id="notice-form-container" class="hidden">
+                <form id="form-create-notice">
+                    <label for="notice-title" data-key="lbl-notice-title">Title:</label>
+                    <input type="text" id="notice-title" required>
+                    <label for="notice-body" data-key="lbl-notice-desc">Details:</label>
+                    <textarea id="notice-body" rows="4" required></textarea>
+                    <button type="submit" class="btn-success" data-key="btn-notice-publish">Publish Notice</button>
+                </form>
+            </div>
+            
+            <div id="notice-list"></div>
+        </section>
+
+        <section id="screen-notice-details" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h3 id="detail-notice-title">Title</h3>
+            <p id="detail-notice-meta" class="meta-text">Date - Publisher</p>
+            <div id="detail-notice-body" class="content-box">Details...</div>
+            <div id="admin-notice-controls" style="display: none; margin-top: 15px;">
+                <button class="btn-secondary" id="btn-edit-notice">Edit</button>
+                <button class="btn-danger" id="btn-delete-notice">Delete</button>
+            </div>
+        </section>
+
+        <section id="screen-request-menu" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="req-menu-title">Request for Help</h2>
+            <button class="nav-btn" data-target="screen-request-scribe" data-key="req-btn-scribe">Scribe Request</button>
+            <button class="nav-btn" data-target="screen-request-reading" data-key="req-btn-reading">Recording Request</button>
+            <button class="nav-btn" data-target="screen-request-general" data-key="req-btn-general">General Request</button>
+            <button class="nav-btn" data-target="screen-your-requests" data-key="req-btn-yours">Your Current Requests</button>
+        </section>
+
+        <section id="screen-request-scribe" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="req-title-scribe">Scribe Request</h2>
+            <form id="form-scribe">
+                <label for="req-scr-name" data-key="lbl-name">Name:</label>
+                <input type="text" id="req-scr-name" required>
+                
+                <label for="req-scr-phone" data-key="lbl-phone">Phone:</label>
+                <input type="tel" id="req-scr-phone" required>
+                
+                <label for="req-scr-dept" data-key="lbl-dept">Department:</label>
+                <input type="text" id="req-scr-dept" required>
+                
+                <label for="req-scr-session" data-key="lbl-session">Session:</label>
+                <input type="text" id="req-scr-session" required>
+
+                <fieldset>
+                    <legend data-key="legend-exam-type">Exam Type:</legend>
+                    <label><input type="radio" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
+                    <label><input type="radio" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-key="legend-year-sem">Select Year/Semester:</legend>
+                    <label><input type="radio" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
+                    <label><input type="radio" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
+                </fieldset>
+                <select id="req-scr-ys-dropdown" required><option value="">Choose an option</option></select>
+
+                <fieldset>
+                    <legend data-key="legend-date">Select Date:</legend>
+                    <div class="flex-row">
+                        <select id="req-scr-day" required><option value="">Day</option></select>
+                        <select id="req-scr-month" required><option value="">Month</option></select>
+                        <span id="req-scr-year" class="bold-text"></span>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-key="legend-time">Enter Time:</legend>
+                    <div class="flex-row">
+                        <input type="number" id="req-scr-hour" placeholder="HH" min="1" max="12" required> :
+                        <input type="number" id="req-scr-minute" placeholder="MM" min="0" max="59" required>
+                        <select id="req-scr-ampm" required>
+                            <option value="AM">AM</option><option value="PM">PM</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <label for="req-scr-duration" data-key="lbl-duration">Exam Duration (Hours):</label>
+                <input type="text" id="req-scr-duration" required>
+
+                <button type="submit" class="btn-primary" data-key="btn-send-req">Send Request</button>
+            </form>
+        </section>
+
+        <section id="screen-request-reading" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="req-title-record">Recording Request</h2>
+            <form id="form-recording">
+                <label for="req-rec-name" data-key="lbl-name">Name:</label>
+                <input type="text" id="req-rec-name" required>
+                
+                <label for="req-rec-dept" data-key="lbl-dept">Department:</label>
+                <input type="text" id="req-rec-dept" required>
+
+                <fieldset>
+                    <legend data-key="legend-material">Material Type:</legend>
+                    <label><input type="radio" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
+                    <label><input type="radio" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
+                </fieldset>
+                
+                <label for="req-rec-pages" data-key="lbl-pages">Number of Pages:</label>
+                <input type="number" id="req-rec-pages" min="1" required>
+
+                <button type="submit" class="btn-primary" data-key="btn-send-req">Send Request</button>
+            </form>
+        </section>
+
+        <section id="screen-request-general" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="req-title-general">General Request</h2>
+            <form id="form-general">
+                <label for="req-gen-name" data-key="lbl-name">Name:</label>
+                <input type="text" id="req-gen-name" required>
+                
+                <label for="req-gen-gender" data-key="lbl-gender">Gender:</label>
+                <input type="text" id="req-gen-gender" readonly>
+                
+                <label for="req-gen-phone" data-key="lbl-phone">Phone:</label>
+                <input type="tel" id="req-gen-phone" required>
+                
+                <label for="req-gen-dept" data-key="lbl-dept">Department:</label>
+                <input type="text" id="req-gen-dept" required>
+                
+                <label for="req-gen-session" data-key="lbl-session">Session:</label>
+                <input type="text" id="req-gen-session" required>
+
+                <label for="req-gen-desc" data-key="lbl-gen-desc">How can we help? (Max 1000 chars):</label>
+                <textarea id="req-gen-desc" rows="5" maxlength="1000" required></textarea>
+
+                <fieldset>
+                    <legend data-key="legend-date">Select Date:</legend>
+                    <div class="flex-row">
+                        <select id="req-gen-day" required><option value="">Day</option></select>
+                        <select id="req-gen-month" required><option value="">Month</option></select>
+                        <span id="req-gen-year" class="bold-text"></span>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend data-key="legend-time">Enter Time:</legend>
+                    <div class="flex-row">
+                        <input type="number" id="req-gen-hour" placeholder="HH" min="1" max="12" required> :
+                        <input type="number" id="req-gen-minute" placeholder="MM" min="0" max="59" required>
+                        <select id="req-gen-ampm" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                    </div>
+                </fieldset>
+
+                <button type="submit" class="btn-primary" data-key="btn-send-req">Send Request</button>
+            </form>
+        </section>
+
+        <section id="screen-your-requests" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="req-title-yours">Your Current Requests</h2>
+            <div id="your-request-list" aria-live="polite"></div>
+        </section>
+
+        <section id="screen-admin" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h1 data-key="app-name">DISSCU</h1>
+            <h2 data-key="admin-title">Admin Manager</h2>
+            
+            <h3 data-key="admin-sub-list">Admin List</h3>
+            <div id="admin-user-list" class="list-container"></div>
+            
+            <hr>
+            <button class="nav-btn" data-target="screen-admin-view-users" data-key="btn-view-users">View Users</button>
+            <button class="nav-btn" data-target="screen-admin-add" data-key="btn-add-admin">Add New Admin</button>
+        </section>
+
+        <section id="screen-admin-view-users" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2 data-key="admin-view-users">All Users</h2>
+            <div class="filter-container">
+                <label><input type="radio" name="admin_user_filter" value="All" checked> All</label>
+                <label><input type="radio" name="admin_user_filter" value="General Member"> General</label>
+                <label><input type="radio" name="admin_user_filter" value="Volunteer"> Volunteer</label>
+                <label><input type="radio" name="admin_user_filter" value="Advisor"> Advisor</label>
+            </div>
+            <div id="full-user-list"></div>
+        </section>
+
+        <section id="screen-admin-add" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2 data-key="admin-add-title">Select User to Make Admin</h2>
+            <div class="filter-container">
+                <label><input type="radio" name="admin_add_filter" value="All" checked> All</label>
+                <label><input type="radio" name="admin_add_filter" value="General Member"> General</label>
+                <label><input type="radio" name="admin_add_filter" value="Volunteer"> Volunteer</label>
+            </div>
+            <div id="potential-admin-list"></div>
+        </section>
+
+        <section id="screen-executive" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>Executive Committee</h2>
+            <p>Content coming soon...</p>
+        </section>
+
+        <section id="screen-advisor" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>Advisor Panel</h2>
+            <p>Content coming soon...</p>
+        </section>
+
+        <section id="screen-settings" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>Settings</h2>
+            <p>App settings coming soon...</p>
+        </section>
+
+        <section id="screen-contact" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>Contact Us</h2>
+            <p>Content coming soon...</p>
+        </section>
+
+        <section id="screen-about" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>About Us</h2>
+            <p>Content coming soon...</p>
+        </section>
+
+        <section id="screen-report" class="screen hidden">
+            <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
+            <h2>Report an Issue</h2>
+            <p>Content coming soon...</p>
+        </section>
+
+    </main>
+
+    <script src="language.js"></script>
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
