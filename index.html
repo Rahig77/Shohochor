@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiSSCU App</title>
+    <title>Shohochor App</title>
     <link rel="stylesheet" href="style.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
@@ -11,7 +11,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div id="sr-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+    <div id="sr-announcer" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
+    <div id="toast-container" aria-hidden="true"></div>
 
     <header class="app-header">
         <button id="btn-language-toggle" data-key="btn-lang" aria-label="Change Language to Bengali">বাংলা</button>
@@ -20,7 +21,7 @@
     <main id="app-container">
 
         <section id="screen-login" class="screen">
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             
             <div class="tabs" role="tablist" aria-label="Authentication Tabs">
                 <button id="tab-login" role="tab" aria-selected="true" aria-controls="form-login-container" tabindex="0" data-key="tab-login">Login</button>
@@ -28,12 +29,17 @@
             </div>
 
             <div id="form-login-container" role="tabpanel" aria-labelledby="tab-login" tabindex="0">
-                <form id="login-form">
+                <form id="login-form" novalidate>
                     <label for="login-email" data-key="label-email">Email Address:</label>
                     <input type="email" id="login-email" placeholder="Enter Email" required>
+                    <div id="login-email-error" class="error-msg" aria-live="polite"></div>
                     
                     <label for="login-password" data-key="label-password">Password:</label>
-                    <input type="password" id="login-password" placeholder="Enter Password" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="login-password" placeholder="Enter Password" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="login-password" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="login-password-error" class="error-msg" aria-live="polite"></div>
                     
                     <button type="button" class="btn-link" id="btn-forgot-pass" data-key="btn-forgot-pass">Forgot Password?</button>
                     <button type="submit" class="btn-primary" data-key="btn-login-submit">Login</button>
@@ -44,36 +50,52 @@
             </div>
 
             <div id="form-register-container" role="tabpanel" aria-labelledby="tab-register" class="hidden" tabindex="0">
-                <form id="register-form">
+                <form id="register-form" novalidate>
                     <label for="reg-name" data-key="label-name">Full Name:</label>
                     <input type="text" id="reg-name" placeholder="Enter Name" required>
+                    <div id="reg-name-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-email" data-key="label-email">Email Address:</label>
                     <input type="email" id="reg-email" placeholder="Enter Email" required>
+                    <div id="reg-email-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-phone" data-key="label-phone">Phone Number:</label>
                     <input type="tel" id="reg-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="phone-desc" required>
                     <div id="phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
+                    <div id="reg-phone-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset>
+                    <fieldset role="radiogroup">
                         <legend data-key="legend-gender">Gender:</legend>
-                        <label><input type="radio" name="reg_gender" value="Male" required><span data-key="gender-male">Male</span></label>
-                        <label><input type="radio" name="reg_gender" value="Female" required><span data-key="gender-female">Female</span></label>
+                        <input type="radio" id="reg-gender-male" name="reg_gender" value="Male" required>
+                        <label for="reg-gender-male" data-key="gender-male" style="display:inline-block;">Male</label>
+                        <input type="radio" id="reg-gender-female" name="reg_gender" value="Female" required>
+                        <label for="reg-gender-female" data-key="gender-female" style="display:inline-block;">Female</label>
                     </fieldset>
 
                     <div id="pwd-desc" class="pwd-instruction sr-only" data-key="desc-pwd-rules">Password must be between 8 and 12 characters long.</div>
                     
                     <label for="reg-password" data-key="label-new-password">New Password (8-12 characters):</label>
-                    <input type="password" id="reg-password" minlength="8" maxlength="12" aria-describedby="pwd-desc" placeholder="8-12 characters" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="reg-password" minlength="8" maxlength="12" aria-describedby="pwd-desc" placeholder="8-12 characters" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="reg-password" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="reg-password-error" class="error-msg" aria-live="polite"></div>
 
                     <label for="reg-password-confirm" data-key="label-confirm-password">Confirm New Password:</label>
-                    <input type="password" id="reg-password-confirm" minlength="8" maxlength="12" placeholder="Re-type password" required>
+                    <div class="password-wrapper" style="display: flex; gap: 10px;">
+                        <input type="password" id="reg-password-confirm" minlength="8" maxlength="12" placeholder="Re-type password" required style="flex-grow: 1;">
+                        <button type="button" class="btn-toggle-password" data-target="reg-password-confirm" aria-label="Show password" aria-pressed="false" style="width: auto;">Show</button>
+                    </div>
+                    <div id="reg-password-confirm-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset>
+                    <fieldset role="radiogroup">
                         <legend data-key="legend-user-type">Join As:</legend>
-                        <label><input type="radio" name="reg_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
-                        <label><input type="radio" name="reg_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
-                        <label><input type="radio" name="reg_type" value="Advisor"><span data-key="role-advisor">Advisor</span></label>
+                        <input type="radio" id="reg-type-general" name="reg_type" value="General Member" checked>
+                        <label for="reg-type-general" data-key="role-general" style="display:inline-block;">General Member</label><br>
+                        <input type="radio" id="reg-type-volunteer" name="reg_type" value="Volunteer">
+                        <label for="reg-type-volunteer" data-key="role-volunteer" style="display:inline-block;">Volunteer</label><br>
+                        <input type="radio" id="reg-type-advisor" name="reg_type" value="Advisor">
+                        <label for="reg-type-advisor" data-key="role-advisor" style="display:inline-block;">Advisor</label>
                     </fieldset>
 
                     <label class="terms-label">
@@ -96,25 +118,31 @@
         </section>
 
         <section id="screen-onboarding" class="screen hidden">
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="onboard-title">Complete Your Profile</h2>
             <p data-key="onboard-desc">Please provide the missing information to continue.</p>
             
             <form id="form-onboarding">
                 <label for="onboard-phone" data-key="label-phone">Phone Number:</label>
-                <input type="tel" id="onboard-phone" pattern="[0-9]{11}" maxlength="11" required>
+                <input type="tel" id="onboard-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="onboard-phone-desc" required>
+                <div id="onboard-phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-gender">Gender:</legend>
-                    <label><input type="radio" name="onboard_gender" value="Male" required><span data-key="gender-male">Male</span></label>
-                    <label><input type="radio" name="onboard_gender" value="Female" required><span data-key="gender-female">Female</span></label>
+                    <input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required>
+                    <label for="onboard-gender-male" data-key="gender-male" style="display:inline-block;">Male</label>
+                    <input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required>
+                    <label for="onboard-gender-female" data-key="gender-female" style="display:inline-block;">Female</label>
                 </fieldset>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-user-type">Join As:</legend>
-                    <label><input type="radio" name="onboard_type" value="General Member" checked><span data-key="role-general">General Member</span></label><br>
-                    <label><input type="radio" name="onboard_type" value="Volunteer"><span data-key="role-volunteer">Volunteer</span></label><br>
-                    <label><input type="radio" name="onboard_type" value="Advisor"><span data-key="role-advisor">Advisor</span></label>
+                    <input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked>
+                    <label for="onboard-type-general" data-key="role-general" style="display:inline-block;">General Member</label><br>
+                    <input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer">
+                    <label for="onboard-type-volunteer" data-key="role-volunteer" style="display:inline-block;">Volunteer</label><br>
+                    <input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor">
+                    <label for="onboard-type-advisor" data-key="role-advisor" style="display:inline-block;">Advisor</label>
                 </fieldset>
                 
                 <button type="submit" class="btn-success" data-key="btn-save-continue">Save & Continue</button>
@@ -122,7 +150,7 @@
         </section>
 
         <section id="screen-dashboard" class="screen hidden">
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <p data-key="welcome">Welcome!</p>
             <h2 data-key="dashboard-title">Dashboard</h2>
             
@@ -149,7 +177,7 @@
 
         <section id="screen-profile" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="profile-title">Profile</h2>
 
             <div class="profile-info">
@@ -190,7 +218,7 @@
 
         <section id="screen-notifications" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="notif-title">Notifications</h2>
             
             <div class="filter-container" aria-label="Notification Filters">
@@ -206,7 +234,7 @@
 
         <section id="screen-feed" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="feed-title">Feed</h2>
             
             <div class="filter-container" aria-label="Feed Filters">
@@ -221,7 +249,7 @@
 
         <section id="screen-notices" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="notices-title">Notice Board</h2>
             
             <button id="btn-show-notice-form" class="btn-primary" data-key="btn-write-notice" style="display: none;"> + Write New Notice </button>
@@ -241,7 +269,7 @@
 
         <section id="screen-notice-details" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h3 id="detail-notice-title">Title</h3>
             <p id="detail-notice-meta" class="meta-text">Date - Publisher</p>
             <div id="detail-notice-body" class="content-box">Details...</div>
@@ -253,7 +281,7 @@
 
         <section id="screen-request-menu" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="req-menu-title">Request for Help</h2>
             <button class="nav-btn" data-target="screen-request-scribe" data-key="req-btn-scribe">Scribe Request</button>
             <button class="nav-btn" data-target="screen-request-reading" data-key="req-btn-reading">Recording Request</button>
@@ -263,14 +291,15 @@
 
         <section id="screen-request-scribe" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="req-title-scribe">Scribe Request</h2>
             <form id="form-scribe">
                 <label for="req-scr-name" data-key="lbl-name">Name:</label>
                 <input type="text" id="req-scr-name" required>
                 
                 <label for="req-scr-phone" data-key="lbl-phone">Phone:</label>
-                <input type="tel" id="req-scr-phone" required>
+                <input type="tel" id="req-scr-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="req-scr-phone-desc" required>
+                <div id="req-scr-phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
                 
                 <label for="req-scr-dept" data-key="lbl-dept">Department:</label>
                 <input type="text" id="req-scr-dept" required>
@@ -278,24 +307,28 @@
                 <label for="req-scr-session" data-key="lbl-session">Session:</label>
                 <input type="text" id="req-scr-session" required>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-exam-type">Exam Type:</legend>
-                    <label><input type="radio" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
-                    <label><input type="radio" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
+                    <input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required>
+                    <label for="req-scr-exam-ct" data-key="exam-ct" style="display:inline-block;">Class Test</label>
+                    <input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required>
+                    <label for="req-scr-exam-main" data-key="exam-main" style="display:inline-block;">Main Exam</label>
                 </fieldset>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-year-sem">Select Year/Semester:</legend>
-                    <label><input type="radio" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
-                    <label><input type="radio" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
+                    <input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year">
+                    <label for="req-scr-ys-year" data-key="radio-year" style="display:inline-block;">Year</label>
+                    <input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester">
+                    <label for="req-scr-ys-sem" data-key="radio-sem" style="display:inline-block;">Semester</label>
                 </fieldset>
                 <select id="req-scr-ys-dropdown" required><option value="">Choose an option</option></select>
 
                 <fieldset>
                     <legend data-key="legend-date">Select Date:</legend>
                     <div class="flex-row">
-                        <select id="req-scr-day" required><option value="">Day</option></select>
-                        <select id="req-scr-month" required><option value="">Month</option></select>
+                        <select id="req-scr-day" aria-label="Day" required><option value="">Day</option></select>
+                        <select id="req-scr-month" aria-label="Month" required><option value="">Month</option></select>
                         <span id="req-scr-year" class="bold-text"></span>
                     </div>
                 </fieldset>
@@ -303,9 +336,9 @@
                 <fieldset>
                     <legend data-key="legend-time">Enter Time:</legend>
                     <div class="flex-row">
-                        <input type="number" id="req-scr-hour" placeholder="HH" min="1" max="12" required> :
-                        <input type="number" id="req-scr-minute" placeholder="MM" min="0" max="59" required>
-                        <select id="req-scr-ampm" required>
+                        <input type="number" id="req-scr-hour" aria-label="Hour" placeholder="HH" min="1" max="12" required> :
+                        <input type="number" id="req-scr-minute" aria-label="Minute" placeholder="MM" min="0" max="59" required>
+                        <select id="req-scr-ampm" aria-label="AM/PM" required>
                             <option value="AM">AM</option><option value="PM">PM</option>
                         </select>
                     </div>
@@ -320,7 +353,7 @@
 
         <section id="screen-request-reading" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="req-title-record">Recording Request</h2>
             <form id="form-recording">
                 <label for="req-rec-name" data-key="lbl-name">Name:</label>
@@ -329,10 +362,12 @@
                 <label for="req-rec-dept" data-key="lbl-dept">Department:</label>
                 <input type="text" id="req-rec-dept" required>
 
-                <fieldset>
+                <fieldset role="radiogroup">
                     <legend data-key="legend-material">Material Type:</legend>
-                    <label><input type="radio" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
-                    <label><input type="radio" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
+                    <input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required>
+                    <label for="req-rec-mat-hard" data-key="mat-hard" style="display:inline-block;">Hard Copy</label>
+                    <input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required>
+                    <label for="req-rec-mat-soft" data-key="mat-soft" style="display:inline-block;">Soft Copy</label>
                 </fieldset>
                 
                 <label for="req-rec-pages" data-key="lbl-pages">Number of Pages:</label>
@@ -344,7 +379,7 @@
 
         <section id="screen-request-general" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="req-title-general">General Request</h2>
             <form id="form-general">
                 <label for="req-gen-name" data-key="lbl-name">Name:</label>
@@ -354,7 +389,8 @@
                 <input type="text" id="req-gen-gender" readonly>
                 
                 <label for="req-gen-phone" data-key="lbl-phone">Phone:</label>
-                <input type="tel" id="req-gen-phone" required>
+                <input type="tel" id="req-gen-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="req-gen-phone-desc" required>
+                <div id="req-gen-phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
                 
                 <label for="req-gen-dept" data-key="lbl-dept">Department:</label>
                 <input type="text" id="req-gen-dept" required>
@@ -368,8 +404,8 @@
                 <fieldset>
                     <legend data-key="legend-date">Select Date:</legend>
                     <div class="flex-row">
-                        <select id="req-gen-day" required><option value="">Day</option></select>
-                        <select id="req-gen-month" required><option value="">Month</option></select>
+                        <select id="req-gen-day" aria-label="Day" required><option value="">Day</option></select>
+                        <select id="req-gen-month" aria-label="Month" required><option value="">Month</option></select>
                         <span id="req-gen-year" class="bold-text"></span>
                     </div>
                 </fieldset>
@@ -377,9 +413,9 @@
                 <fieldset>
                     <legend data-key="legend-time">Enter Time:</legend>
                     <div class="flex-row">
-                        <input type="number" id="req-gen-hour" placeholder="HH" min="1" max="12" required> :
-                        <input type="number" id="req-gen-minute" placeholder="MM" min="0" max="59" required>
-                        <select id="req-gen-ampm" required><option value="AM">AM</option><option value="PM">PM</option></select>
+                        <input type="number" id="req-gen-hour" aria-label="Hour" placeholder="HH" min="1" max="12" required> :
+                        <input type="number" id="req-gen-minute" aria-label="Minute" placeholder="MM" min="0" max="59" required>
+                        <select id="req-gen-ampm" aria-label="AM/PM" required><option value="AM">AM</option><option value="PM">PM</option></select>
                     </div>
                 </fieldset>
 
@@ -389,14 +425,14 @@
 
         <section id="screen-your-requests" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="req-title-yours">Your Current Requests</h2>
             <div id="your-request-list" aria-live="polite"></div>
         </section>
 
         <section id="screen-admin" class="screen hidden">
             <button class="btn-back" data-key="btn-back"> &lt; Go Back </button>
-            <h1 data-key="app-name">DISSCU</h1>
+            <h1 data-key="app-name">SHOHOCHOR</h1>
             <h2 data-key="admin-title">Admin Manager</h2>
             
             <h3 data-key="admin-sub-list">Admin List</h3>
