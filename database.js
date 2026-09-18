@@ -74,10 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const phone = document.getElementById('reg-phone').value;
-            const gender = document.querySelector('input[name="reg_gender"]:checked').value;
+            const gender = document.querySelector('input[name="gender"]:checked').value;
             const password = document.getElementById('reg-password').value;
-            const role = document.querySelector('input[name="reg_type"]:checked').value;
-            const terms = document.getElementById('reg-terms').checked;
+            const role = document.querySelector('input[name="account-type"]:checked').value;
+            const terms = document.getElementById('terms').checked;
 
             if (!terms) {
                 showToast("You must accept the Terms and Conditions."); return;
