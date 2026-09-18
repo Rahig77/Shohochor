@@ -266,6 +266,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     element.value = translations[lang][key];
                 } else {
                     element.textContent = translations[lang][key];
+                    // Also update aria-label on sibling input if present (e.g., for radio/checkbox labels)
+                    const prev = element.previousElementSibling;
+                    if (prev && prev.tagName === "INPUT" && prev.hasAttribute('aria-label')) {
+                        prev.setAttribute('aria-label', translations[lang][key]);
+                    }
                 }
             }
         });
