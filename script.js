@@ -199,7 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         form.querySelectorAll('input[required]').forEach(input => {
             clearInlineError(input.id);
-            if (!input.value.trim()) {
+            if (input.type === 'radio' || input.type === 'checkbox') {
+                if (!input.checkValidity()) {
+                    showInlineError(input.id, "Please select an option.");
+                    isValid = false;
+                    if (!firstInvalidInput) firstInvalidInput = input;
+                }
+            } else if (!input.value.trim()) {
                 showInlineError(input.id, "This field cannot be left blank.");
                 isValid = false;
                 if (!firstInvalidInput) firstInvalidInput = input;

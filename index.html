@@ -64,13 +64,12 @@
                     <div id="phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
                     <div id="reg-phone-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset role="radiogroup">
+                    <fieldset>
                         <legend data-key="legend-gender">Gender:</legend>
-                        <input type="radio" id="reg-gender-male" name="reg_gender" value="Male" required>
-                        <label for="reg-gender-male" data-key="gender-male" style="display:inline-block;">Male</label>
-                        <input type="radio" id="reg-gender-female" name="reg_gender" value="Female" required>
-                        <label for="reg-gender-female" data-key="gender-female" style="display:inline-block;">Female</label>
+                        <label><input type="radio" id="reg-gender-male" name="reg_gender" value="Male" required> <span data-key="gender-male">Male</span></label>
+                        <label><input type="radio" id="reg-gender-female" name="reg_gender" value="Female" required> <span data-key="gender-female">Female</span></label>
                     </fieldset>
+                    <div id="reg-gender-male-error" class="error-msg" aria-live="polite"></div>
 
                     <div id="pwd-desc" class="pwd-instruction sr-only" data-key="desc-pwd-rules">Password must be between 8 and 12 characters long.</div>
                     
@@ -88,20 +87,18 @@
                     </div>
                     <div id="reg-password-confirm-error" class="error-msg" aria-live="polite"></div>
 
-                    <fieldset role="radiogroup">
+                    <fieldset>
                         <legend data-key="legend-user-type">Join As:</legend>
-                        <input type="radio" id="reg-type-general" name="reg_type" value="General Member" checked>
-                        <label for="reg-type-general" data-key="role-general" style="display:inline-block;">General Member</label><br>
-                        <input type="radio" id="reg-type-volunteer" name="reg_type" value="Volunteer">
-                        <label for="reg-type-volunteer" data-key="role-volunteer" style="display:inline-block;">Volunteer</label><br>
-                        <input type="radio" id="reg-type-advisor" name="reg_type" value="Advisor">
-                        <label for="reg-type-advisor" data-key="role-advisor" style="display:inline-block;">Advisor</label>
+                        <label><input type="radio" id="reg-type-general" name="reg_type" value="General Member" checked> <span data-key="role-general">General Member</span></label><br>
+                        <label><input type="radio" id="reg-type-volunteer" name="reg_type" value="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                        <label><input type="radio" id="reg-type-advisor" name="reg_type" value="Advisor"> <span data-key="role-advisor">Advisor</span></label>
                     </fieldset>
 
                     <label class="terms-label">
-                        <input type="checkbox" id="reg-terms" required> 
+                        <input type="checkbox" id="reg-terms" name="reg-terms" required>
                         <span data-key="text-terms">I accept the Terms and Conditions</span>
                     </label>
+                    <div id="reg-terms-error" class="error-msg" aria-live="polite"></div>
 
                     <button type="submit" class="btn-primary" data-key="btn-register-submit">Register</button>
                 </form>
@@ -127,22 +124,17 @@
                 <input type="tel" id="onboard-phone" pattern="[0-9]{11}" maxlength="11" placeholder="11-digit number" aria-describedby="onboard-phone-desc" required>
                 <div id="onboard-phone-desc" class="sr-only">Phone number must be exactly 11 digits.</div>
 
-                <fieldset role="radiogroup">
+                <fieldset>
                     <legend data-key="legend-gender">Gender:</legend>
-                    <input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required>
-                    <label for="onboard-gender-male" data-key="gender-male" style="display:inline-block;">Male</label>
-                    <input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required>
-                    <label for="onboard-gender-female" data-key="gender-female" style="display:inline-block;">Female</label>
+                    <label><input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required> <span data-key="gender-male">Male</span></label>
+                    <label><input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required> <span data-key="gender-female">Female</span></label>
                 </fieldset>
 
-                <fieldset role="radiogroup">
+                <fieldset>
                     <legend data-key="legend-user-type">Join As:</legend>
-                    <input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked>
-                    <label for="onboard-type-general" data-key="role-general" style="display:inline-block;">General Member</label><br>
-                    <input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer">
-                    <label for="onboard-type-volunteer" data-key="role-volunteer" style="display:inline-block;">Volunteer</label><br>
-                    <input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor">
-                    <label for="onboard-type-advisor" data-key="role-advisor" style="display:inline-block;">Advisor</label>
+                    <label><input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked> <span data-key="role-general">General Member</span></label><br>
+                    <label><input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                    <label><input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor"> <span data-key="role-advisor">Advisor</span></label>
                 </fieldset>
                 
                 <button type="submit" class="btn-success" data-key="btn-save-continue">Save & Continue</button>
@@ -307,20 +299,16 @@
                 <label for="req-scr-session" data-key="lbl-session">Session:</label>
                 <input type="text" id="req-scr-session" required>
 
-                <fieldset role="radiogroup">
+                <fieldset>
                     <legend data-key="legend-exam-type">Exam Type:</legend>
-                    <input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required>
-                    <label for="req-scr-exam-ct" data-key="exam-ct" style="display:inline-block;">Class Test</label>
-                    <input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required>
-                    <label for="req-scr-exam-main" data-key="exam-main" style="display:inline-block;">Main Exam</label>
+                    <label><input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
+                    <label><input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
                 </fieldset>
 
-                <fieldset role="radiogroup">
+                <fieldset>
                     <legend data-key="legend-year-sem">Select Year/Semester:</legend>
-                    <input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year">
-                    <label for="req-scr-ys-year" data-key="radio-year" style="display:inline-block;">Year</label>
-                    <input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester">
-                    <label for="req-scr-ys-sem" data-key="radio-sem" style="display:inline-block;">Semester</label>
+                    <label><input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
+                    <label><input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
                 </fieldset>
                 <select id="req-scr-ys-dropdown" required><option value="">Choose an option</option></select>
 
@@ -362,12 +350,10 @@
                 <label for="req-rec-dept" data-key="lbl-dept">Department:</label>
                 <input type="text" id="req-rec-dept" required>
 
-                <fieldset role="radiogroup">
+                <fieldset>
                     <legend data-key="legend-material">Material Type:</legend>
-                    <input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required>
-                    <label for="req-rec-mat-hard" data-key="mat-hard" style="display:inline-block;">Hard Copy</label>
-                    <input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required>
-                    <label for="req-rec-mat-soft" data-key="mat-soft" style="display:inline-block;">Soft Copy</label>
+                    <label><input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
+                    <label><input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
                 </fieldset>
                 
                 <label for="req-rec-pages" data-key="lbl-pages">Number of Pages:</label>
