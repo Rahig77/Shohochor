@@ -66,8 +66,8 @@
 
                     <fieldset>
                         <legend data-key="legend-gender">Gender:</legend>
-                        <label><input type="radio" id="gender-male" name="gender" value="male" aria-label="Male" required> <span data-key="gender-male">Male</span></label>
-                        <label><input type="radio" id="gender-female" name="gender" value="female" aria-label="Female" required> <span data-key="gender-female">Female</span></label>
+                        <label for="gender-male"><input type="radio" id="gender-male" name="gender" value="male" required> <span data-key="gender-male">Male</span></label>
+                        <label for="gender-female"><input type="radio" id="gender-female" name="gender" value="female" required> <span data-key="gender-female">Female</span></label>
                     </fieldset>
                     <div id="gender-male-error" class="error-msg" aria-live="polite"></div>
 
@@ -89,13 +89,13 @@
 
                     <fieldset>
                         <legend data-key="legend-user-type">Join As:</legend>
-                        <label><input type="radio" id="type-general" name="account-type" value="general" aria-label="General Member" checked> <span data-key="role-general">General Member</span></label><br>
-                        <label><input type="radio" id="type-volunteer" name="account-type" value="volunteer" aria-label="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
-                        <label><input type="radio" id="type-advisor" name="account-type" value="advisor" aria-label="Advisor"> <span data-key="role-advisor">Advisor</span></label>
+                        <label for="type-general"><input type="radio" id="type-general" name="account-type" value="general" checked> <span data-key="role-general">General Member</span></label><br>
+                        <label for="type-volunteer"><input type="radio" id="type-volunteer" name="account-type" value="volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                        <label for="type-advisor"><input type="radio" id="type-advisor" name="account-type" value="advisor"> <span data-key="role-advisor">Advisor</span></label>
                     </fieldset>
 
-                    <label class="terms-label">
-                        <input type="checkbox" id="terms" name="terms" aria-label="I accept the Terms and Conditions" required> <span data-key="text-terms">I accept the Terms and Conditions</span>
+                    <label for="terms" class="terms-label">
+                        <input type="checkbox" id="terms" name="terms" required> <span data-key="text-terms">I accept the Terms and Conditions</span>
                     </label>
                     <div id="terms-error" class="error-msg" aria-live="polite"></div>
 
@@ -125,15 +125,15 @@
 
                 <fieldset>
                     <legend data-key="legend-gender">Gender:</legend>
-                    <label><input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" aria-label="Male" required> <span data-key="gender-male">Male</span></label>
-                    <label><input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" aria-label="Female" required> <span data-key="gender-female">Female</span></label>
+                    <label for="onboard-gender-male"><input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required> <span data-key="gender-male">Male</span></label>
+                    <label for="onboard-gender-female"><input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required> <span data-key="gender-female">Female</span></label>
                 </fieldset>
 
                 <fieldset>
                     <legend data-key="legend-user-type">Join As:</legend>
-                    <label><input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" aria-label="General Member" checked> <span data-key="role-general">General Member</span></label><br>
-                    <label><input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer" aria-label="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
-                    <label><input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor" aria-label="Advisor"> <span data-key="role-advisor">Advisor</span></label>
+                    <label for="onboard-type-general"><input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked> <span data-key="role-general">General Member</span></label><br>
+                    <label for="onboard-type-volunteer"><input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                    <label for="onboard-type-advisor"><input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor"> <span data-key="role-advisor">Advisor</span></label>
                 </fieldset>
                 
                 <button type="submit" class="btn-success" data-key="btn-save-continue">Save & Continue</button>
@@ -300,14 +300,14 @@
 
                 <fieldset>
                     <legend data-key="legend-exam-type">Exam Type:</legend>
-                    <label><input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" aria-label="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
-                    <label><input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" aria-label="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
+                    <label for="req-scr-exam-ct"><input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
+                    <label for="req-scr-exam-main"><input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
                 </fieldset>
 
                 <fieldset>
                     <legend data-key="legend-year-sem">Select Year/Semester:</legend>
-                    <label><input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year" aria-label="Year"> <span data-key="radio-year">Year</span></label>
-                    <label><input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester" aria-label="Semester"> <span data-key="radio-sem">Semester</span></label>
+                    <label for="req-scr-ys-year"><input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
+                    <label for="req-scr-ys-sem"><input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
                 </fieldset>
                 <select id="req-scr-ys-dropdown" required><option value="">Choose an option</option></select>
 
@@ -351,8 +351,8 @@
 
                 <fieldset>
                     <legend data-key="legend-material">Material Type:</legend>
-                    <label><input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" aria-label="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
-                    <label><input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" aria-label="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
+                    <label for="req-rec-mat-hard"><input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
+                    <label for="req-rec-mat-soft"><input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
                 </fieldset>
                 
                 <label for="req-rec-pages" data-key="lbl-pages">Number of Pages:</label>
