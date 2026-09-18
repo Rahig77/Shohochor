@@ -12,7 +12,7 @@
 </head>
 <body>
     <div id="sr-announcer" class="sr-only" role="alert" aria-live="assertive" aria-atomic="true"></div>
-    <div id="toast-container" aria-hidden="true"></div>
+    <div id="toast-container"></div>
 
     <header class="app-header">
         <button id="btn-language-toggle" data-key="btn-lang" aria-label="Change Language to Bengali">বাংলা</button>
@@ -28,7 +28,7 @@
                 <button id="tab-register" role="tab" aria-selected="false" aria-controls="form-register-container" tabindex="-1" data-key="tab-register">Registration</button>
             </div>
 
-            <div id="form-login-container" role="tabpanel" aria-labelledby="tab-login" tabindex="0">
+            <div id="form-login-container" role="tabpanel" aria-labelledby="tab-login">
                 <form id="login-form" novalidate>
                     <label for="login-email" data-key="label-email">Email Address:</label>
                     <input type="email" id="login-email" placeholder="Enter Email" required>
@@ -49,7 +49,7 @@
                 <button type="button" id="btn-google-login" class="btn-secondary google-btn">Sign in with Google</button>
             </div>
 
-            <div id="form-register-container" role="tabpanel" aria-labelledby="tab-register" class="hidden" tabindex="0">
+            <div id="form-register-container" role="tabpanel" aria-labelledby="tab-register" class="hidden">
                 <form id="register-form" novalidate>
                     <label for="reg-name" data-key="label-name">Full Name:</label>
                     <input type="text" id="reg-name" placeholder="Enter Name" required>
@@ -66,8 +66,8 @@
 
                     <fieldset>
                         <legend data-key="legend-gender">Gender:</legend>
-                        <label for="gender-male" data-key="gender-male"><input type="radio" id="gender-male" name="gender" value="male" required> Male</label>
-                        <label for="gender-female" data-key="gender-female"><input type="radio" id="gender-female" name="gender" value="female" required> Female</label>
+                        <label><input type="radio" id="gender-male" name="gender" value="male" required> <span data-key="gender-male">Male</span></label>
+                        <label><input type="radio" id="gender-female" name="gender" value="female" required> <span data-key="gender-female">Female</span></label>
                     </fieldset>
                     <div id="gender-male-error" class="error-msg" aria-live="polite"></div>
 
@@ -89,13 +89,13 @@
 
                     <fieldset>
                         <legend data-key="legend-user-type">Join As:</legend>
-                        <label for="type-general" data-key="role-general"><input type="radio" id="type-general" name="account-type" value="general" checked> General Member</label><br>
-                        <label for="type-volunteer" data-key="role-volunteer"><input type="radio" id="type-volunteer" name="account-type" value="volunteer"> Volunteer</label><br>
-                        <label for="type-advisor" data-key="role-advisor"><input type="radio" id="type-advisor" name="account-type" value="advisor"> Advisor</label>
+                        <label><input type="radio" id="type-general" name="account-type" value="general" checked> <span data-key="role-general">General Member</span></label><br>
+                        <label><input type="radio" id="type-volunteer" name="account-type" value="volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                        <label><input type="radio" id="type-advisor" name="account-type" value="advisor"> <span data-key="role-advisor">Advisor</span></label>
                     </fieldset>
 
-                    <label for="terms" class="terms-label" data-key="text-terms">
-                        <input type="checkbox" id="terms" name="terms" required> I accept the Terms and Conditions
+                    <label class="terms-label">
+                        <input type="checkbox" id="terms" name="terms" required> <span data-key="text-terms">I accept the Terms and Conditions</span>
                     </label>
                     <div id="terms-error" class="error-msg" aria-live="polite"></div>
 
@@ -125,15 +125,15 @@
 
                 <fieldset>
                     <legend data-key="legend-gender">Gender:</legend>
-                    <label for="onboard-gender-male" data-key="gender-male"><input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required> Male</label>
-                    <label for="onboard-gender-female" data-key="gender-female"><input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required> Female</label>
+                    <label><input type="radio" id="onboard-gender-male" name="onboard_gender" value="Male" required> <span data-key="gender-male">Male</span></label>
+                    <label><input type="radio" id="onboard-gender-female" name="onboard_gender" value="Female" required> <span data-key="gender-female">Female</span></label>
                 </fieldset>
 
                 <fieldset>
                     <legend data-key="legend-user-type">Join As:</legend>
-                    <label for="onboard-type-general" data-key="role-general"><input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked> General Member</label><br>
-                    <label for="onboard-type-volunteer" data-key="role-volunteer"><input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer"> Volunteer</label><br>
-                    <label for="onboard-type-advisor" data-key="role-advisor"><input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor"> Advisor</label>
+                    <label><input type="radio" id="onboard-type-general" name="onboard_type" value="General Member" checked> <span data-key="role-general">General Member</span></label><br>
+                    <label><input type="radio" id="onboard-type-volunteer" name="onboard_type" value="Volunteer"> <span data-key="role-volunteer">Volunteer</span></label><br>
+                    <label><input type="radio" id="onboard-type-advisor" name="onboard_type" value="Advisor"> <span data-key="role-advisor">Advisor</span></label>
                 </fieldset>
                 
                 <button type="submit" class="btn-success" data-key="btn-save-continue">Save & Continue</button>
@@ -300,14 +300,14 @@
 
                 <fieldset>
                     <legend data-key="legend-exam-type">Exam Type:</legend>
-                    <label for="req-scr-exam-ct" data-key="exam-ct"><input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required> Class Test</label>
-                    <label for="req-scr-exam-main" data-key="exam-main"><input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required> Main Exam</label>
+                    <label><input type="radio" id="req-scr-exam-ct" name="req_scr_exam" value="Class Test" required> <span data-key="exam-ct">Class Test</span></label>
+                    <label><input type="radio" id="req-scr-exam-main" name="req_scr_exam" value="Main Exam" required> <span data-key="exam-main">Main Exam</span></label>
                 </fieldset>
 
                 <fieldset>
                     <legend data-key="legend-year-sem">Select Year/Semester:</legend>
-                    <label for="req-scr-ys-year" data-key="radio-year"><input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year"> Year</label>
-                    <label for="req-scr-ys-sem" data-key="radio-sem"><input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester"> Semester</label>
+                    <label><input type="radio" id="req-scr-ys-year" name="req_scr_ys_toggle" value="year"> <span data-key="radio-year">Year</span></label>
+                    <label><input type="radio" id="req-scr-ys-sem" name="req_scr_ys_toggle" value="semester"> <span data-key="radio-sem">Semester</span></label>
                 </fieldset>
                 <select id="req-scr-ys-dropdown" required><option value="">Choose an option</option></select>
 
@@ -351,8 +351,8 @@
 
                 <fieldset>
                     <legend data-key="legend-material">Material Type:</legend>
-                    <label for="req-rec-mat-hard" data-key="mat-hard"><input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required> Hard Copy</label>
-                    <label for="req-rec-mat-soft" data-key="mat-soft"><input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required> Soft Copy</label>
+                    <label><input type="radio" id="req-rec-mat-hard" name="req_rec_mat" value="Hard Copy" required> <span data-key="mat-hard">Hard Copy</span></label>
+                    <label><input type="radio" id="req-rec-mat-soft" name="req_rec_mat" value="Soft Copy" required> <span data-key="mat-soft">Soft Copy</span></label>
                 </fieldset>
                 
                 <label for="req-rec-pages" data-key="lbl-pages">Number of Pages:</label>

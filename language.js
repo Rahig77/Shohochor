@@ -265,22 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (element.tagName === "INPUT" && element.type === "button") {
                     element.value = translations[lang][key];
                 } else {
-                    // Check if element has child nodes that need preserving (like inputs)
-                    const hasInput = element.querySelector('input');
-                    if (hasInput) {
-                        let textUpdated = false;
-                        Array.from(element.childNodes).forEach(node => {
-                            if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '') {
-                                node.nodeValue = " " + translations[lang][key];
-                                textUpdated = true;
-                            }
-                        });
-                        if (!textUpdated) {
-                            element.appendChild(document.createTextNode(" " + translations[lang][key]));
-                        }
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
+                    element.textContent = translations[lang][key];
                 }
             }
         });
