@@ -220,9 +220,8 @@ fieldset label {
     cursor: pointer;
 }
 
-input[type="radio"] {
-    transform: scale(1.5);        /* রেডিও বাটনগুলো বড় করা হয়েছে যেন সহজে দেখা যায় */
-    margin-right: 12px;
+input[type="radio"], input[type="checkbox"] {
+    margin-right: 8px;
     vertical-align: middle;
 }
 
